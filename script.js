@@ -19,6 +19,16 @@
         albumNameArray.push(albumName);
         console.log(albumName);
     };
+    const svg = d3.select("#bar-chart")
+    .append("svg")
+    .attr("width", width)
+    .attr("height", height + 50)
+    //.append("g")
+    //.attr("transform", "translate(" + 100 + ",0)")
+    ;
+
+
+
 
     /*
     albumData = data; // Gem data globalt
