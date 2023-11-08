@@ -1,0 +1,34 @@
+
+
+
+
+const xScale = d3
+  .scaleLinear()
+  .domain([
+    0,
+    d3.max(data, function (d) {
+      return d[0];
+    }),
+  ])
+  .range([30, w - 30])
+  .nice();
+
+//Skala for y-aksen
+const yScale = d3
+  .scaleLinear()
+  .domain([
+    0,
+    d3.max(data, function (d) {
+      return d[1];
+    }),
+  ])
+  /**
+   * Sidste gang gik vi blot ud fra 0,0 i øverste venstre hjørne for y-værdierne også
+   * det betød at de blev tegnet oppefra og ned, så vi måtte trække dem fra h
+   * for at få dem flyttet ned. Ved at bytte om på rækkefølgen af de to tal i range
+   * kan vi få dem til at blive tegnet nedefra og op.
+   * Dette skrev vi sidste gang: .range([30, h - 30])
+   * Dette skriver vi nu:
+   **/
+  .range([h - 30, 30])
+  .nice();

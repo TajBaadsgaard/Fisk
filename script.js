@@ -27,7 +27,38 @@
     //.attr("transform", "translate(" + 100 + ",0)")
     ;
 
+// x-akse
+var xScale = d3.scaleLinear()
+        .domain([0,5000])
+        .range([0, svgWidth, 0]);
 
+
+    var yScale = d3.scaleLinear()
+        .domain([0, 100]) //Vi skalere fra 0 til den højeste værdi i vores datasæt
+        .range([svgHeight, 0]); //Det sørger for at det hele bliver inde i SVG'en
+
+
+
+
+    //Akser
+    var x_axis = d3.axisBottom()
+        .scale(xScale);
+
+
+    var y_axis = d3.axisLeft()
+        .scale(yScale);
+
+
+    svg.append ("g")
+        .attr("transform", "translate(50, 10)")
+        .call(y_axis);
+       
+    var xAxisTranslate = svgHeight - 20;
+
+
+    svg.append("g")
+        .attr("transform", "translate(50, " + xAxisTranslate +")")
+        .call(x_axis);
 
 
     /*
