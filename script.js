@@ -30,14 +30,12 @@
 // x-akse
 var xScale = d3.scaleLinear()
         .domain([0,5000])
-        .range([0, svgWidth, 0]);
+        .range([0, width]);
 
 
     var yScale = d3.scaleLinear()
         .domain([0, 100]) //Vi skalere fra 0 til den højeste værdi i vores datasæt
-        .range([svgHeight, 0]); //Det sørger for at det hele bliver inde i SVG'en
-
-
+        .range([height, 0]); //Det sørger for at det hele bliver inde i SVG'en
 
 
     //Akser
@@ -53,7 +51,7 @@ var xScale = d3.scaleLinear()
         .attr("transform", "translate(50, 10)")
         .call(y_axis);
        
-    var xAxisTranslate = svgHeight - 20;
+    var xAxisTranslate = height + 10;
 
 
     svg.append("g")
