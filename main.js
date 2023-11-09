@@ -56,8 +56,6 @@ d3.json("albums.json", function(data) {
     // Nu gør vi vores knapper functionelle
     d3.selectAll("#sortFullPlays, #sortFavorites").on("click", function (e) {
 
-      console.log("HEY");
-
       // Find hvilken knap der blev trykket på
       let id = d3.event.target.id;
       console.log(id);
