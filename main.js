@@ -19,6 +19,25 @@ var svg = d3.select("#dataVisualisering")
 // Vi indlæser json data ved hjælp af d3
 d3.json("albums.json", function(data) {
 
+
+  function sortDataFullPlay(data) {
+
+    data.sort(function (a , b){
+      return a.fullPlays - b.fullPlays;
+    })
+
+
+  }
+
+  function sortDataFavorites(data) {
+
+    data.sort(function (a,b){
+      return a.favorites - b.favorites;
+    })
+
+
+  }
+
   function createAxisX (xTal){
     let xAkse = this.xTal; 
     
@@ -129,24 +148,30 @@ svg.append("g")
       console.log(d3.event.target.id);
       let id = d3.event.target.id;
       console.log(id);
+            // Vælg det rigtige datasæt
       
-    console.log(data);
-      // Vælg det rigtige datasæt
-      let newData = data.fullPlays;
-      
+            console.log("Før Data Sorteres");
+            console.log(data);
+
+
+      let newData = sortDataFullPlay(data);
+
+      console.log("Efter Data sorteres");
+      console.log(newData);
+      console.log("Sortering Done");
+
+
+
+
+
 
       if (id === "sortFavorites") {
-        newData = data.favorites;
+        newData = sortDataFavorites(data);
         createAxisX(1000);
         createAxisY();
         createBarcharFavorites(newData);
       }
-      else if (id === "sortFullPlays") {
-        newData = data.fullPlays;
-        createAxisX(500);
-        createAxisY();
-        createBarcharFullPlays(newData);
-      }
+
       console.log(newData);
 
       
