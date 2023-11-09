@@ -46,7 +46,7 @@ d3.json("albums.json", function(data) {
     .append("rect")
     .attr("x", x(7) ) //Her definere vi hvor bar'en starter på y-aksen
     .attr("y", function(d) { return y(d.albumName); }) //Her vælger vi dataen der kommer ind i y-aksen
-    .attr("width", function(d) { return x(d.fullPlays); })
+    .attr("width", function(d) { return x(d.fullPlays); }) //Her definere vi hvor lang bar'en skal være
     .attr("height", y.bandwidth() )
     .attr("fill", "#69b3a2");
 
