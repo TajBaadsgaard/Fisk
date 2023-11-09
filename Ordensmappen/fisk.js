@@ -1,3 +1,38 @@
+    //Hjælpefunktioner som sætter de dynamiske data som skal bruges til at lave scales og akser
+    function createScaleX(data) {
+      return d3
+        .scaleLinear()
+        .domain([
+          0,
+          d3.max(data, function (d) {
+            return d[0];
+          }),
+        ])
+        .range([30, w - 30])
+        .nice();
+    }
+  
+  
+    function createAxisX(yScale) {
+      return d3.axisBottom().scale(yScale).ticks(5);
+    }
+  
+  
+    function setUp(data) {
+      console.log("setUp with dataset: " + data);
+      xScale = createScaleX(data);
+      xAxis = createAxisX(xScale);
+    }
+
+
+
+
+
+
+
+
+
+
 d3.selectAll("#sortFullPlays, sortFavorites").on("click", function (e) {
 
   // Find hvilken knap der blev trykket på

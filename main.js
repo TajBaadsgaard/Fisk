@@ -3,7 +3,7 @@ let albumData;
 
 // Definere marginer og dimensioner for vores svg
 const margin = { top: 20, right: 30, bottom: 40, left: 20 };
-const width = 700;
+const width = 1000;
 const height = 500;
 
 // Indlæs musikalbumdata fra en JSON-fil ved hjælp af D3.js
@@ -19,9 +19,11 @@ d3.json("albums.json").then(function(data) {
         .append("g")
         .attr("transform", "translate(" + 100 + ",0)");
 
+
+    
     // Definér X-skalaen for diagrammet
     const x = d3.scaleLinear()
-        .domain([0, 5000])
+        .domain([0, 3500])
         .range([0, width]);
 
     // Tilføj X-aksen til diagrammet
@@ -63,6 +65,8 @@ d3.json("albums.json").then(function(data) {
             .transition()
             .duration(5000)
             .call(d3.axisLeft(y));
+
+
     }
 
     // Definér Y-skalaen for diagrammet
@@ -99,6 +103,7 @@ d3.json("albums.json").then(function(data) {
     // Begivenhedslytter for knappen "Sortér Fuld Afspilninger"
     d3.select("#sortFullPlays").on("click", function() {
         updateChart("fullPlays");
+        
     });
 
     // Initial opdatering af diagrammet med nøglen "favorites"
