@@ -5,6 +5,7 @@ let albumData;
 const margin = { top: 20, right: 30, bottom: 40, left: 20 };
 const width = 700;
 const height = 500;
+//HEY
 
 // Load your music album data from a JSON file
 d3.json("albums.json").then(function(data) {
