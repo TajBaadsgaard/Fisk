@@ -19,10 +19,11 @@ var svg = d3.select("#dataVisualisering")
 // Vi indlæser json data ved hjælp af d3
 d3.json("albums.json", function(data) {
 
-  function createAxisX (data){
-
+  function createAxisX (xTal){
+    let xAkse = this.xTal; 
+    
     const x = d3.scaleLinear()
-    .domain([0, 2000])
+    .domain([0, xAkse])
     .range([ 0, width]);
   svg.append("g")
     .attr("transform", "translate(0," + height + ")")
@@ -33,7 +34,7 @@ d3.json("albums.json", function(data) {
 
   }
 
-  function createAxisY(info){
+  function createAxisY(){
       // Y axis
   
   this.info = data;
@@ -45,9 +46,12 @@ svg.append("g")
   .call(d3.axisLeft(y))
   }
 
-  function createBarcharFavorites(){
+  function createBarcharFavorites(data){
 
-    this.data = data;
+    console.log("Favorites Start");
+
+
+    
       //Bars
   svg.selectAll("myRect")
   .data(data)
@@ -58,6 +62,27 @@ svg.append("g")
   .attr("width", function(d) { return x(d.favorites); }) //Her definere vi hvor lang bar'en skal være
   .attr("height", y.bandwidth() )
   .attr("fill", "#69b3a2");
+
+  console.log("Favorites Start");
+
+  }
+
+
+
+  function createBarcharFullPlays(data){
+    console.log("Fullplays Start");
+      //Bars
+  svg.selectAll("myRect")
+  .data(data)
+  .enter()
+  .append("rect")
+  .attr("x", x(7) ) //Her definere vi hvor bar'en starter på y-aksen
+  .attr("y", function(d) { return y(d.albumName); }) //Her vælger vi dataen der kommer ind i y-aksen
+  .attr("width", function(d) { return x(d.fullPlays); }) //Her definere vi hvor lang bar'en skal være
+  .attr("height", y.bandwidth() )
+  .attr("fill", "#69b3a2");
+
+    console.log("Fullplays End");
 
 
   }
@@ -101,23 +126,29 @@ svg.append("g")
     d3.selectAll("#sortFullPlays, #sortFavorites").on("click", function (e) {
 
       // Find hvilken knap der blev trykket på
+      console.log(d3.event.target.id);
       let id = d3.event.target.id;
       console.log(id);
-    
+      
+    console.log(data);
       // Vælg det rigtige datasæt
       let newData = data.fullPlays;
+      
+
       if (id === "sortFavorites") {
         newData = data.favorites;
-        createAxisX();
+        createAxisX(1000);
         createAxisY();
         createBarcharFavorites(newData);
       }
       else if (id === "sortFullPlays") {
         newData = data.fullPlays;
-        createAxisX();
+        createAxisX(500);
         createAxisY();
-        createBarcharFavorites(newData);
+        createBarcharFullPlays(newData);
       }
+      console.log(newData);
+
       
 
     })
