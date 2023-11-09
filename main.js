@@ -50,5 +50,19 @@ d3.json("albums.json", function(data) {
     .attr("height", y.bandwidth() )
     .attr("fill", "#69b3a2");
 
+
+    // Nu gør vi vores knapper functionelle
+    d3.selectAll("#sortFullPlays, sortFavorites").on("click", function (e) {
+
+      // Find hvilken knap der blev trykket på
+      let id = e.target.id;
+      console.log(id);
+    
+      // Vælg det rigtige datasæt
+      let newData = data.fullPlays;
+      if (id === "sortFavorites") {
+        newData = data.favorites;
+      }})
+
 })
 
