@@ -1,3 +1,25 @@
+d3.selectAll("#sortFullPlays, sortFavorites").on("click", function (e) {
+
+  // Find hvilken knap der blev trykket på
+  let id = e.target.id;
+  console.log(id);
+
+  // Vælg det rigtige datasæt
+  let newData = dataset1;
+  if (id === "data2") {
+    newData = dataset2;
+  } else if (id === "data3") {
+    newData = dataset3;
+  }})
+
+
+
+
+
+
+
+
+
 
 
 
