@@ -1,31 +1,50 @@
         // Globalt dataarray
         let albumData;
-        let albumNameArray = [];
+        //let albumNameArray = [];
+        //let d = [];
 
         // set the dimensions and margins of the graph
         const margin = { top: 20, right: 30, bottom: 40, left: 20 };
         const width = 700;
         const height = 500;
+        const padding = 10;
+        const axisPadding = 70;
 
  
-        // loader json data ind
- d3.json("albums.json").then(function(data) {
+        // loader json-filen data ind
+ d3.json("albums.json").then(function(dataset) {
+    albumData = dataset;
     //Jeg bruger loopet til at dele data op i flere arrays i stedet for et stort objekt
-    for (let i = 0; i < data.length; i++){
-        currentAlbum = data[i];
+   /* for (let i = 0; i < dataset.length; i++){
+        currentAlbum = dataset[i];
 
         //Her laver jeg en en array med alle album navne
         let albumName = currentAlbum.albumName;
+        let number = currentAlbum.favorites;
         albumNameArray.push(albumName);
+        d.push(number);
         console.log(albumName);
-    };
-    const svg = d3.select("#bar-chart")
+        console.log(number);
+
+        
+    };*/
+
+    let svg = d3.select("#bar-chart")
     .append("svg")
     .attr("width", width)
     .attr("height", height + 50)
     //.append("g")
     //.attr("transform", "translate(" + 100 + ",0)")
     ;
+
+    // BARCHART----------- Her laver vi grafen
+    //let maxValue = Math.max(...albumFullplay); //For at sikre at de højeste værdier kan være med i visualiseringn
+
+
+    var svgWidth = 700, svgHeight = 500, barPadding = 5;
+    var barWidth = (svgWidth / 15);
+
+
 
 // x-akse
 var xScale = d3.scaleLinear()
@@ -59,6 +78,57 @@ var xScale = d3.scaleLinear()
         .call(x_axis);
 
 
+        var barChart = svg.selectAll("rect")
+        .data(dataset)
+        .enter()
+        .append("rect")
+        .attr("y", function(d) {
+            return svgHeight- yScale(d)
+        })
+        .attr("height", function(d) {
+            return yScale(d);
+        })
+        .attr("width", barWidth - barPadding)
+        .attr("transform", function (d, i) {
+            var translate = [barWidth * i, 0];
+            return "translate(" + translate + ")";
+        });
+        console.log(dataset[0]);
+svg
+    .selectAll("rect")
+    /**
+     * Der skal gives en key til hvert datapunkt, så d3 kan genkende dem.
+     * Det gør vi ved at give en callback-funktion som returnerer en værdi som er unik for hvert datapunkt.
+     * I dette tilfælde er det dato-stemplet, som er unikt for hvert datapunkt.
+     * */
+    .data(dataset, function (d) {
+      return d[3];
+    })
+    .enter()
+    .append("rect")
+    .attr("x", function (d, i) {
+      console.log(d);
+      return i * dataset.length;
+    })
+    .attr("x", function (d, i) {
+      return xScale(i) + padding;
+    })
+    .attr("y", function (d) {
+      return yScale(d[1]);
+    })
+    .attr(
+      "width",
+      width / dataset.length - 2 * padding - (2 * axisPadding) / dataset.length
+    )
+    .attr("height", function (d) {
+     // console.log("height: " + (yScale(d[1]) - axisPadding));
+      //return height - padding - axisPadding - yScale(d[1]);
+    })
+    .attr("fill", function (d) {
+      return "rgb(0, 0, " + (256 - d[1]) + ")";
+    });
+}
+
     /*
     albumData = data; // Gem data globalt
     console.log(data.artistName);
@@ -71,5 +141,5 @@ var xScale = d3.scaleLinear()
     console.log(cds);
     showDataOnScreenFromOBJ(cds);
     */
-  });
+  );
   
