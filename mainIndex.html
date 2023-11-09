@@ -1,22 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Document</title>
-    <script src="https://d3js.org/d3.v4.js"></script>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <h1>Musik Albums</h1>
-
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musikalbumarkiv Visualisering</title>
+    <style>
+        /* Tilføj CSS-styling efter behov */
+        .bar {
+            fill: #69b3a2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Musikalbumarkiv Visualisering</h1>
+    <!-- Knapper til sortering -->
     <div id="sortButtons">
-      <button id="sortFavorites">Sorter efter Favoritter</button>
-      <button id="sortFullPlays">Sorter efter Full Plays</button>
-  </div>
+        <button id="sortFavorites">Sorter efter Favoritter</button>
+        <button id="sortFullPlays">Sorter efter Full Plays</button>
+    </div>
+    <!-- Container til søjlediagrammet -->
+    <div id="myChart"></div>
 
-    <div id="dataVisualisering"></div>
-
-    <svg class="bar-chart"></svg>
-    <script src="main.js"></script>
-  </body>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="/main.js"></script>
+</body>
 </html>

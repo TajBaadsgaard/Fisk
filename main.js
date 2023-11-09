@@ -1,182 +1,85 @@
-// Vi definere margin, bredde og højde for grafen
-var margin = {top: 20, right: 30, bottom: 40, left: 90};
-let width = 700;
-let height = 500;
+// Globalt dataarray
+let albumData;
 
-// Vi tilføjer SVG'en til HTML dokumentet.
+// set the dimensions and margins of the graph
+const margin = { top: 20, right: 30, bottom: 40, left: 20 };
+const width = 700;
+const height = 500;
+
+// Load your music album data from a JSON file
+d3.json("albums.json").then(function(data) {
+    albumData = data; // Gem data globalt
 
 // append the svg object to the body of the page
-var svg = d3.select("#dataVisualisering")
-  .append("svg")
+const svg = d3.select("#myChart")
+    .append("svg")
     .attr("width", width)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
+    .attr("height", height + 50)
+    .append("g")
+    .attr("transform", "translate(" + 100 + ",0)");
 
-  
-
-// Vi indlæser json data ved hjælp af d3
-d3.json("albums.json", function(data) {
-
-
-  function sortDataFullPlay(data) {
-
-    data.sort(function (a , b){
-      return a.fullPlays - b.fullPlays;
-    })
-
-
-  }
-
-  function sortDataFavorites(data) {
-
-    data.sort(function (a,b){
-      return a.favorites - b.favorites;
-    })
-
-
-  }
-
-  function createAxisX (xTal){
-    let xAkse = this.xTal; 
-    
+    // Add X axis
     const x = d3.scaleLinear()
-    .domain([0, xAkse])
-    .range([ 0, width]);
-  svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x))
-    .selectAll("text")
-      .attr("transform", "translate(-30,0)rotate(-45)")
-      .style("text-anchor", "end");
+        .domain([0, 5000])
+        .range([0, width]);
 
-  }
-
-  function createAxisY(){
-      // Y axis
-  
-  this.info = data;
-  const y = d3.scaleBand()
-  .range([ 0, height ])
-  .domain(data.map(function(d) { return d.albumName; }))
-  .padding(.2);
-svg.append("g")
-  .call(d3.axisLeft(y))
-  }
-
-  function createBarcharFavorites(data){
-
-    console.log("Favorites Start");
+    // Add X axis
+    svg.append("g")
+        .attr("transform", "translate(0," + (height) + ")")
+        .call(d3.axisBottom(x).ticks(15))
+        .selectAll("text")
+        .attr("transform", "translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end");
 
 
-    
-      //Bars
-  svg.selectAll("myRect")
-  .data(data)
-  .enter()
-  .append("rect")
-  .attr("x", x(7) ) //Her definere vi hvor bar'en starter på y-aksen
-  .attr("y", function(d) { return y(d.albumName); }) //Her vælger vi dataen der kommer ind i y-aksen
-  .attr("width", function(d) { return x(d.favorites); }) //Her definere vi hvor lang bar'en skal være
-  .attr("height", y.bandwidth() )
-  .attr("fill", "#69b3a2");
+    // Funktion til at opdatere albumdata og søjler baseret på nøgle og albumnavn
+    function updateChart(key) {
+        albumData.sort((a, b) => b[key] - a[key]);
 
-  console.log("Favorites Start");
+        y.domain(albumData.map(d => d.albumName));
 
-  }
+        svg.selectAll(".bar")
+            .data(albumData, d => d.albumName)
+            .transition()
+            .duration(5000)
+            .attr("y", d => y(d.albumName))
+            .attr("width", d => x(d[key]));
 
+        svg.select(".y-axis")
+            .transition()
+            .duration(5000)
+            .call(d3.axisLeft(y));
+    }
 
+    // Y akse
+    const y = d3.scaleBand()
+        .range([0, height])
+        .domain(albumData.map(d => d.albumName))
+        .padding(0.1);
+    svg.append("g")
+        .attr("class", "y-axis")
+        .call(d3.axisLeft(y));
 
-  function createBarcharFullPlays(data){
-    console.log("Fullplays Start");
-      //Bars
-  svg.selectAll("myRect")
-  .data(data)
-  .enter()
-  .append("rect")
-  .attr("x", x(7) ) //Her definere vi hvor bar'en starter på y-aksen
-  .attr("y", function(d) { return y(d.albumName); }) //Her vælger vi dataen der kommer ind i y-aksen
-  .attr("width", function(d) { return x(d.fullPlays); }) //Her definere vi hvor lang bar'en skal være
-  .attr("height", y.bandwidth() )
-  .attr("fill", "#69b3a2");
+    // Søjler
+    svg.selectAll(".bar")
+        .data(albumData)
+        .enter()
+        .append("rect")
+        .attr("class", "bar")
+        .attr("x", 0)
+        .attr("y", d => y(d.albumName))
+        .attr("width", 0)
+        .attr("height", y.bandwidth());
+        
 
-    console.log("Fullplays End");
+    // Lytter til knapperne for sortering
+    d3.select("#sortFavorites").on("click", () => {
+        updateChart("favorites");
+    });
 
+    d3.select("#sortFullPlays").on("click", () => {
+        updateChart("fullPlays");
+    });
+    updateChart("favorites");
 
-  }
-  
-
-
-  // Vi laver x-axsen
-  const x = d3.scaleLinear()
-    .domain([0, 2000])
-    .range([ 0, width]);
-  svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x))
-    .selectAll("text")
-      .attr("transform", "translate(-30,0)rotate(-45)")
-      .style("text-anchor", "end");
-
-
-  // Y axis
-  const y = d3.scaleBand()
-    .range([ 0, height ])
-    .domain(data.map(function(d) { return d.albumName; }))
-    .padding(.2);
-  svg.append("g")
-    .call(d3.axisLeft(y))
-
-  //Bars
-  svg.selectAll("myRect")
-    .data(data)
-    .enter()
-    .append("rect")
-    .attr("x", x(7) ) //Her definere vi hvor bar'en starter på y-aksen
-    .attr("y", function(d) { return y(d.albumName); }) //Her vælger vi dataen der kommer ind i y-aksen
-    .attr("width", function(d) { return x(d.fullPlays); }) //Her definere vi hvor lang bar'en skal være
-    .attr("height", y.bandwidth() )
-    .attr("fill", "#69b3a2");
-
-  
-
-    // Nu gør vi vores knapper functionelle
-    d3.selectAll("#sortFullPlays, #sortFavorites").on("click", function (e) {
-
-      // Find hvilken knap der blev trykket på
-      console.log(d3.event.target.id);
-      let id = d3.event.target.id;
-      console.log(id);
-            // Vælg det rigtige datasæt
-      
-            console.log("Før Data Sorteres");
-            console.log(data);
-
-
-      let newData = sortDataFullPlay(data);
-
-      console.log("Efter Data sorteres");
-      console.log(newData);
-      console.log("Sortering Done");
-
-
-
-
-
-
-      if (id === "sortFavorites") {
-        newData = sortDataFavorites(data);
-        createAxisX(1000);
-        createAxisY();
-        createBarcharFavorites(newData);
-      }
-
-      console.log(newData);
-
-      
-
-    })
-
-})
-
+                });
