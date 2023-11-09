@@ -19,6 +19,50 @@ var svg = d3.select("#dataVisualisering")
 // Vi indlæser json data ved hjælp af d3
 d3.json("albums.json", function(data) {
 
+  function createAxisX (data){
+
+    const x = d3.scaleLinear()
+    .domain([0, 2000])
+    .range([ 0, width]);
+  svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+      .attr("transform", "translate(-30,0)rotate(-45)")
+      .style("text-anchor", "end");
+
+  }
+
+  function createAxisY(info){
+      // Y axis
+  
+  this.info = data;
+  const y = d3.scaleBand()
+  .range([ 0, height ])
+  .domain(data.map(function(d) { return d.albumName; }))
+  .padding(.2);
+svg.append("g")
+  .call(d3.axisLeft(y))
+  }
+
+  function createBarcharFavorites(){
+
+    this.data = data;
+      //Bars
+  svg.selectAll("myRect")
+  .data(data)
+  .enter()
+  .append("rect")
+  .attr("x", x(7) ) //Her definere vi hvor bar'en starter på y-aksen
+  .attr("y", function(d) { return y(d.albumName); }) //Her vælger vi dataen der kommer ind i y-aksen
+  .attr("width", function(d) { return x(d.favorites); }) //Her definere vi hvor lang bar'en skal være
+  .attr("height", y.bandwidth() )
+  .attr("fill", "#69b3a2");
+
+
+  }
+  
+
 
   // Vi laver x-axsen
   const x = d3.scaleLinear()
@@ -64,7 +108,18 @@ d3.json("albums.json", function(data) {
       let newData = data.fullPlays;
       if (id === "sortFavorites") {
         newData = data.favorites;
+        createAxisX();
+        createAxisY();
+        createBarcharFavorites(newData);
       }
+      else if (id === "sortFullPlays") {
+        newData = data.fullPlays;
+        createAxisX();
+        createAxisY();
+        createBarcharFavorites(newData);
+      }
+      
+
     })
 
 })
