@@ -1,32 +1,32 @@
-// Deklarer en variabel til at gemme albumdata
+// Deklarerer en variabel til at gemme albumdata
 let albumData;
 
-// Definere marginer og dimensioner for vores svg
+// Definerer marginer og dimensioner for vores svg
 const margin = { top: 20, right: 30, bottom: 40, left: 20 };
 const width = 1000;
 const height = 500;
 
-// Indlæs musikalbumdata fra en JSON-fil ved hjælp af D3.js
+// Indlæser musikalbumdata fra en JSON-fil ved hjælp af D3.js
 d3.json("albums.json").then(function(data) {
-    // Gem de indlæste data i variablen albumData
+    // Gemmer de indlæste data i variablen albumData
     albumData = data;
 
-    // Opret et SVG-element til diagrammet
+    // Opretter et SVG-element til diagrammet
     const svg = d3.select("#myChart")
         .append("svg")
         .attr("width", width)
         .attr("height", height + 50)
         .append("g")
-        .attr("transform", "translate(" + 200 + ",0)");
-
+        .attr("transform", "translate(" + 200 + ",0)")
+        .attr("color", "white");
 
     
-    // Definér X-skalaen for diagrammet
+    // Definérer X-skalaen for diagrammet
     const x = d3.scaleLinear()
-        .domain([0, 3500])
+        .domain([0, 3754])
         .range([0, width]);
 
-    // Tilføj X-aksen til diagrammet
+    // Tilføjer X-aksen til diagrammet
     svg.append("g")
         .attr("transform", "translate(0," + (height) + ")")
         .call(d3.axisBottom(x).ticks(15))
@@ -34,19 +34,29 @@ d3.json("albums.json").then(function(data) {
         .attr("transform", "translate(-10,0)rotate(-45)")
         .attr("class", "x-axis"); //Sådan vi kan style den i CSS
 
-    // Funktion til at opdatere diagrammet baseret på den valgte nøgle
+    // En funktion til at opdatere diagrammet baseret på den valgte nøgle
     function updateChart(key) {
-        // Sorter albumData baseret på den valgte nøgle i faldende rækkefølge
+        // Sorterer albumData baseret på den valgte nøgle i faldende rækkefølge
         albumData.sort(function(a, b) {
             return b[key] - a[key];
         });
 
-        // Opdater Y-skalaens domæne baseret på den sorterede albumData
+        // Opdaterer Y-skalaens domæne baseret på den sorterede albumData
         y.domain(albumData.map(function(d) {
             return d.albumName;
         }));
 
-        // Opdater søjlerne med overgange
+        // Opdaterer X-skalaen baseret på den valgte nøgle
+        //x.domain([0, d3.max(albumData, function(d) { return d[key]; })]);
+
+        // Opdaterer X-aksen med overgange
+        svg.select(".x-axis")
+            .transition()
+            .duration(1000)
+            .call(d3.axisBottom(x).ticks(15));
+
+
+        // Opdaterer søjlerne med overgange
         svg.selectAll(".bar")
             .data(albumData, function(d) {
                 return d.albumName;
@@ -60,7 +70,7 @@ d3.json("albums.json").then(function(data) {
                 return x(d[key]);
             });
 
-        // Opdater Y-aksen med overgange
+        // Opdaterer Y-aksen med overgange
         svg.select(".y-axis")
             .transition()
             .duration(5000)
@@ -69,7 +79,7 @@ d3.json("albums.json").then(function(data) {
 
     }
 
-    // Definér Y-skalaen for diagrammet
+    // Definérer Y-skalaen for diagrammet
     const y = d3.scaleBand()
         .range([0, height])
         .domain(albumData.map(function(d) {
@@ -77,12 +87,12 @@ d3.json("albums.json").then(function(data) {
         }))
         .padding(0.1);
 
-    // Tilføj Y-aksen til diagrammet
+    // Tilføjer Y-aksen til diagrammet
     svg.append("g")
         .attr("class", "y-axis")
         .call(d3.axisLeft(y));
 
-    // Tilføj søjler til diagrammet
+    // Tilføjer søjlerne til diagrammet
     svg.selectAll(".bar")
         .data(albumData)
         .enter()
@@ -95,17 +105,17 @@ d3.json("albums.json").then(function(data) {
         .attr("width", 0)
         .attr("height", y.bandwidth());
 
-    // Begivenhedslytter for knappen "Sortér Favoritter"
+    // Eventlistener for knappen "Sortér Favoritter"
     d3.select("#sortFavorites").on("click", function() {
         updateChart("favorites");
     });
 
-    // Begivenhedslytter for knappen "Sortér Fuld Afspilninger"
+    // Eventlistener for knappen "Sortér Fuld Afspilninger"
     d3.select("#sortFullPlays").on("click", function() {
         updateChart("fullPlays");
         
     });
 
-    // Initial opdatering af diagrammet med nøglen "favorites"
+    // Opdatering af diagrammet fra første indlæsning
     updateChart("favorites");
 });
