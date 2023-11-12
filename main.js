@@ -17,7 +17,7 @@ d3.json("albums.json").then(function(data) {
         .attr("width", width)
         .attr("height", height + 50)
         .append("g")
-        .attr("transform", "translate(" + 100 + ",0)");
+        .attr("transform", "translate(" + 200 + ",0)");
 
 
     
@@ -32,7 +32,7 @@ d3.json("albums.json").then(function(data) {
         .call(d3.axisBottom(x).ticks(15))
         .selectAll("text")
         .attr("transform", "translate(-10,0)rotate(-45)")
-        .style("text-anchor", "end");
+        .attr("class", "x-axis"); //Sådan vi kan style den i CSS
 
     // Funktion til at opdatere diagrammet baseret på den valgte nøgle
     function updateChart(key) {
